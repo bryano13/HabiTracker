@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet" />
+    <link href="{{ url_for('static',filename='styles/table.css') }}" rel="stylesheet" />
+    <title>New Habit</title>
+</head>
+<body class="container">
+    <h1>Create a New Habit</h1><br>
+    <form id="loginForm" action="/new" method="post">
+        <input type="text" name="habitName" id="name" placeholder="Habit Name" required>
+        <input type="text" name="location" id="where" placeholder="Where?" required>
+        <input type="text" name="time" id="time" value="0:00" 
+            readonly required autocomplete="off" size="5" autofocus>
+        <button type="submit" name="submit" id="submit">Submit</button>
+    </form>
+
+<script>
+    var timepicker = new TimePicker('#time', {
+            lang: 'en',
+            theme: 'dark'
+        });
+        timepicker.on('change', function (evt) {
+            var value = (evt.hour || '00') + ':' + (evt.minute || '00');
+            evt.element.value = value;
+        });
+</script>
+</body>
+</html>

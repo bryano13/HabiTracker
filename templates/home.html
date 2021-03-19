@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static',filename='styles/table.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static',filename='styles/button.css') }}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <title>Home Page</title>
+</head>
+<body>          
+    <div class="container">
+        <ul class="responsive-table">
+            
+            <li class="table-header">
+                <div class="col col-1">ID</div>
+                <div class="col col-2">Habit Name</div>
+                <div class="col col-3" >Location</div>
+                <div class="col col-4" >Time</div>
+                <div class="col col-5" >Done?</div>
+                <div class="col col-6" >Count</div>
+            </li>
+            {% set i = namespace(value=0) %}
+            {% for obj in objList %}
+                <div id="new_row">
+                    <li class="table-row">
+                        <div class="col col-1" data-label="ID">{{ obj.id }}</div>
+                        <div class="col col-2" data-label="Habit Name">{{ obj.name }}</div>
+                        <div class="col col-3" data-label="Location">{{obj.location}}</div>
+                        <div class="col col-4" data-label="Time">{{obj.time}}</div>
+                        <div class="col col-5" data-label="Done">
+                            <button id="{{obj.id}}" name="{{ obj.id }}" class="{{ classlist[i.value] }}" {{obj.disable}}>
+                                {{obj.done}}
+                            </button>
+                        </div>
+                        <div class="col col-6" data-label="Count" id="c{{ obj.id }}"> {{obj.count}} </div>
+                    </li>
+                </div>
+            {% set i.value = i.value + 1 %}
+            {% endfor %}
+            </ul>
+            <br>
+           
+        <a href="/new">Add a new habit</a>
+    </div><br>
+
+<script>      
+    $("button").click(function () {
+        // alert("button clicked!!");
+        var identificacion = $(this).attr("id");
+        var button_id = "#" + identificacion;
+        var count_id = "#" + "c" + identificacion;
+        $.ajax(
+            {
+                url: "/update_decimal",
+                type: "POST",
+                dataType: "json",
+                data: {id: identificacion},
+                success: function (data) {
+                    $(count_id).replaceWith(data);
+                    // $(button_id).replaceWith(data);
+                    $(button_id).removeClass("learn-more");
+                    $(button_id).addClass("newclass");
+                    $(button_id).html("DONE!");
+                    $(button_id).prop("disabled", true);
+                }
+            });
+    });
+    
+</script>
+
+</body>
+</html>
